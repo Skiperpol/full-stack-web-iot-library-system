@@ -9,7 +9,11 @@ export default function RootLayout() {
       <header className="sticky top-0 z-50 bg-black py-1 w-full">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
           <Link to="/" className="flex items-center gap-2 text-white">
-            <span className="h-3 w-3 rounded-full bg-red-600" />
+            <img
+              src="/src/assets/library-logo.png"
+              alt="Logo"
+              className="h-16 w-16"
+            />
             <span className="text-base font-semibold tracking-tight text-xl">
               Library
             </span>
@@ -20,9 +24,7 @@ export default function RootLayout() {
               to="/books"
               className={({ isActive }) =>
                 `${baseItem} ${
-                  isActive
-                    ? "text-zinc-200 underline underline-offset-4"
-                    : "text-white hover:text-zinc-200"
+                  isActive ? "text-zinc-200" : "text-white hover:text-zinc-200"
                 }`
               }
             >
@@ -30,16 +32,14 @@ export default function RootLayout() {
             </NavLink>
 
             <NavLink
-              to="/users"
+              to="/clients"
               className={({ isActive }) =>
                 `${baseItem} ${
-                  isActive
-                    ? "text-zinc-200 underline underline-offset-4"
-                    : "text-white hover:text-zinc-200"
+                  isActive ? "text-zinc-200" : "text-white hover:text-zinc-200"
                 }`
               }
             >
-              Users
+              Clients
             </NavLink>
           </nav>
         </div>
