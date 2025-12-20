@@ -162,7 +162,7 @@ export default function ClientPage() {
             </h2>
 
             <p className="mt-2 text-sm text-neutral-600">
-              {client.card ? client.card.uid : "No active borrows."}
+              {client.cardId ? client.cardId : "No active borrows."}
             </p>
           </div>
 

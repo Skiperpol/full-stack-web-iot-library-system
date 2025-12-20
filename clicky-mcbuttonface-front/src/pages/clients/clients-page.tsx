@@ -25,7 +25,7 @@ export default function ClientsPage() {
     navigate("/clients/add-form");
   };
 
-  const handleOpenClient = (id: number) => {
+  const handleOpenClient = (id: string) => {
     navigate(`/clients/${id}`);
   };
 
@@ -69,9 +69,9 @@ export default function ClientsPage() {
           <div className="space-y-4">
             {clients.map((client) => (
               <ClientTile
-                key={client.id}
+                key={client.cardId}
                 client={client}
-                onClick={() => handleOpenClient(client.id)}
+                onClick={() => handleOpenClient(client.cardId)}
               />
             ))}
           </div>

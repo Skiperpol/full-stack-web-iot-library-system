@@ -24,19 +24,20 @@ export default function BookTile({ book }: { book: Book }) {
               : "border border-neutral-300 bg-white text-neutral-600"
           }`}
         >
-          {isBorrowed ? "Borrowed" : "Available"}
+          {book.borrows.length} borrow
+          {book.borrows.length === 1 ? "" : "s"}
         </span>
       </div>
 
       <div className="mt-3 space-y-2 text-xs text-neutral-600">
         <div className="flex items-center justify-between gap-2">
-          <span className="truncate">
-            Card ID:{" "}
-            <span className="font-medium">{book.cardId ?? "—"}</span>
-          </span>
-          <span className="text-[13px] text-neutral-500 mr-2">
-            {book.borrows.length} borrow
-            {book.borrows.length === 1 ? "" : "s"}
+          <span className="truncate text-neutral-400">{book.cardId}</span>
+          <span
+            className={`mr-2 text-[13px] font-medium ${
+              isBorrowed ? "text-red-600" : "text-green-600"
+            }`}
+          >
+            {isBorrowed ? "Borrowed" : "Available"}
           </span>
         </div>
 
