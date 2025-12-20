@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import HashLoader from "react-spinners/HashLoader";
+import Button from "../../components/button";
 
 export default function AddClientFormPage() {
   const navigate = useNavigate();
@@ -10,6 +12,7 @@ export default function AddClientFormPage() {
   const [cardUid, setCardUid] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [cardDialogOpen, setCardDialogOpen] = useState(false);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -34,6 +37,14 @@ export default function AddClientFormPage() {
 
   const handleCancel = () => {
     navigate("/clients");
+  };
+
+  const handleOpenCardDialog = () => {
+    setCardDialogOpen(true);
+  };
+
+  const handleCloseCardDialog = () => {
+    setCardDialogOpen(false);
   };
 
   return (
@@ -75,7 +86,7 @@ export default function AddClientFormPage() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-100"
+                className="w-full min-h-12 rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-100"
                 placeholder="Alice Smith"
               />
             </div>
@@ -93,51 +104,83 @@ export default function AddClientFormPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-100"
+                className="w-full min-h-12 rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-100"
                 placeholder="alice@example.com"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label
-                htmlFor="cardUid"
-                className="text-xs font-medium uppercase tracking-wide text-neutral-700"
-              >
-                Card UID (optional)
-              </label>
-              <input
-                id="cardUid"
-                type="text"
-                value={cardUid}
-                onChange={(e) => setCardUid(e.target.value)}
-                className="w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-100"
-                placeholder="04A1B2C3D4"
-              />
-              <p className="text-[11px] text-neutral-500">
-                Leave empty if the client doesn&apos;t have a card yet.
-              </p>
+              <span className="text-xs font-medium uppercase tracking-wide text-neutral-700">
+                Card UID
+              </span>
+
+              <div className="w-full min-h-12 flex items-center rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-100">
+                {cardUid.trim() === "" ? (
+                  <span className="text-sm text-neutral-500">
+                    No card assigned
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center rounded-full border border-neutral-200 bg-neutral-50 px-2.5 py-1 text-sm font-mono text-neutral-800">
+                    {cardUid}
+                  </span>
+                )}
+
+                <div className="ml-auto">
+                  {cardUid.trim() === "" ? (
+                    <Button
+                      type="button"
+                      variant="primary"
+                      onClick={handleOpenCardDialog}
+                      disabled={submitting}
+                    >
+                      Add card
+                    </Button>
+                  ) : null}
+                </div>
+              </div>
             </div>
 
             <div className="flex items-center justify-end gap-3 pt-2">
-              <button
+              <Button
                 type="button"
+                variant="secondary"
                 onClick={handleCancel}
-                className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-1.5 text-xs font-medium text-neutral-800 shadow-sm transition hover:bg-neutral-50 active:bg-neutral-50"
                 disabled={submitting}
               >
                 Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={submitting}
-                className="inline-flex items-center gap-2 rounded-full bg-black px-5 py-2 text-xs font-medium text-white shadow-sm transition hover:bg-neutral-900 active:bg-black/90 disabled:cursor-not-allowed disabled:opacity-70"
-              >
+              </Button>
+              <Button type="submit" variant="primary" disabled={submitting}>
                 {submitting ? "Saving..." : "Save client"}
-              </button>
+              </Button>
             </div>
           </form>
         </div>
       </div>
+
+      {cardDialogOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="min-w-1/4 max-w-2/5 rounded-2xl bg-white p-6 shadow-lg">
+            <h2 className="text-base font-semibold leading-tight">
+              Waiting for card…
+            </h2>
+            <p className="mt-1 text-xs text-neutral-500">
+              Hold the RFID card near the reader to assign it to this client.
+            </p>
+
+            <div className="mt-16 flex flex-col items-center gap-4">
+              <HashLoader />
+              <Button
+                type="button"
+                variant="primary"
+                className="mt-12"
+                onClick={handleCloseCardDialog}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
