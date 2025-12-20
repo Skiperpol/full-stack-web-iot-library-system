@@ -5,6 +5,7 @@ import Loading from "../../components/loading";
 import ErrorInfo from "../../components/error-info";
 import BookTile from "../../components/books/book-tile";
 import type { Book } from "../../types/book";
+import Button from "../../components/button";
 
 export default function BooksPage() {
   const [books, setBooks] = useState<Book[]>([]);
@@ -44,17 +45,14 @@ export default function BooksPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="hidden rounded-full border border-neutral-200 bg-neutral-50 px-3 py-1 text-xs font-medium text-neutral-700 sm:inline-flex">
+            <span className="inline-flex h-8 items-center rounded-full border border-neutral-200 bg-neutral-50 px-6 text-xs font-medium text-neutral-700">
               {books.length} book{books.length === 1 ? "" : "s"}
             </span>
-            <button
-              type="button"
-              onClick={handleAddBook}
-              className="inline-flex items-center gap-2 rounded-full bg-black px-4 py-1.5 text-xs font-medium text-white shadow-sm transition hover:bg-neutral-900 active:bg-black/90"
-            >
+
+            <Button type="button" variant="primary" onClick={handleAddBook}>
               <span className="text-sm leading-none">+</span>
               <span>Add book</span>
-            </button>
+            </Button>
           </div>
         </header>
 

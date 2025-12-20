@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import Button from "../../components/button";
 
 export default function AddBookFormPage() {
   const navigate = useNavigate();
@@ -73,7 +74,7 @@ export default function AddBookFormPage() {
                 required
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-100"
+                className="w-full min-h-12 rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-100"
                 placeholder="Clean Code"
               />
             </div>
@@ -91,27 +92,23 @@ export default function AddBookFormPage() {
                 required
                 value={author}
                 onChange={(e) => setAuthor(e.target.value)}
-                className="w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-100"
+                className="w-full min-h-12 rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-100"
                 placeholder="Robert C. Martin"
               />
             </div>
 
             <div className="flex items-center justify-end gap-3 pt-2">
-              <button
+              <Button
                 type="button"
+                variant="secondary"
                 onClick={handleCancel}
-                className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-1.5 text-xs font-medium text-neutral-800 shadow-sm transition hover:bg-neutral-50 active:bg-neutral-50"
                 disabled={submitting}
               >
                 Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={submitting}
-                className="inline-flex items-center gap-2 rounded-full bg-black px-5 py-2 text-xs font-medium text-white shadow-sm transition hover:bg-neutral-900 active:bg-black/90 disabled:cursor-not-allowed disabled:opacity-70"
-              >
+              </Button>
+              <Button type="submit" variant="primary" disabled={submitting}>
                 {submitting ? "Saving..." : "Save book"}
-              </button>
+              </Button>
             </div>
           </form>
         </div>

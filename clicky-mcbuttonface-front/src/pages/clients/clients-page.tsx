@@ -5,6 +5,7 @@ import Loading from "../../components/loading";
 import ErrorInfo from "../../components/error-info";
 import ClientTile from "../../components/clients/client-tile";
 import type { Client } from "../../types/client";
+import Button from "../../components/button";
 
 export default function ClientsPage() {
   const [clients, setClients] = useState<Client[]>([]);
@@ -44,17 +45,14 @@ export default function ClientsPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="hidden rounded-full border border-neutral-200 bg-neutral-50 px-3 py-1 text-xs font-medium text-neutral-700 sm:inline-flex">
+            <span className="inline-flex h-8 items-center rounded-full border border-neutral-200 bg-neutral-50 px-6 text-xs font-medium text-neutral-700">
               {clients.length} client{clients.length === 1 ? "" : "s"}
             </span>
-            <button
-              type="button"
-              onClick={handleAddClient}
-              className="inline-flex items-center gap-2 rounded-full bg-black px-4 py-1.5 text-xs font-medium text-white shadow-sm transition hover:bg-neutral-900 active:bg-black/90"
-            >
+
+            <Button type="button" variant="primary" onClick={handleAddClient}>
               <span className="text-sm leading-none">+</span>
-              <span>Add client</span>
-            </button>
+              <span>Add book</span>
+            </Button>
           </div>
         </header>
 

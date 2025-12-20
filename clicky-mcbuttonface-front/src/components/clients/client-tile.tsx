@@ -15,7 +15,7 @@ export default function ClientTile({ client }: { client: Client }) {
         </div>
 
         <span
-          className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${
+          className={`inline-flex h-8 items-center rounded-full px-6 text-[11px] font-semibold ${
             client.card
               ? "border border-red-600 bg-red-50 text-red-700"
               : "border border-neutral-300 bg-white text-neutral-600"
@@ -31,7 +31,7 @@ export default function ClientTile({ client }: { client: Client }) {
             Card UID:{" "}
             <span className="font-medium">{client.card?.uid ?? "—"}</span>
           </span>
-          <span className="text-[11px] text-neutral-500">
+          <span className="text-[13px] text-neutral-500 mr-2">
             {client.borrows.length} borrow
             {client.borrows.length === 1 ? "" : "s"}
           </span>

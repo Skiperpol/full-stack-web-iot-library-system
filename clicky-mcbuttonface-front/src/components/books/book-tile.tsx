@@ -18,7 +18,7 @@ export default function BookTile({ book }: { book: Book }) {
         </div>
 
         <span
-          className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${
+          className={`inline-flex h-8 items-center rounded-full px-6 text-[11px] font-semibold ${
             isBorrowed
               ? "border border-red-600 bg-red-50 text-red-700"
               : "border border-neutral-300 bg-white text-neutral-600"
@@ -36,7 +36,7 @@ export default function BookTile({ book }: { book: Book }) {
               {isBorrowed ? "Currently borrowed" : "On shelf"}
             </span>
           </span>
-          <span className="text-[11px] text-neutral-500">
+          <span className="text-[13px] text-neutral-500 mr-2">
             {book.borrows.length} borrow
             {book.borrows.length === 1 ? "" : "s"}
           </span>
