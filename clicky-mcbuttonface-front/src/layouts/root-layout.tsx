@@ -50,7 +50,7 @@ export default function RootLayout() {
         <Outlet />
         <ToastContainer
           position="top-center"
-          autoClose={3500}
+          autoClose={3000}
           aria-label={undefined}
         />
       </main>

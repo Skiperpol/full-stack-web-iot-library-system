@@ -72,6 +72,18 @@ export class RfidController {
     return result;
   }
 
+  @Post("scan-client-mock")
+  async scanClientCardMock() {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    return { status: "ok", cardId: "CARDUID-USER-1" };
+  }
+
+  @Post("scan-book-mock")
+  async scanBookCardMock() {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    return { status: "ok", cardId: "CARDUID-BOOK-2" };
+  }
+
   @Post("register-request")
   async registerRequest() {
     const result = await this.rfidService.scanForRfidCard(async (uid, card) => {

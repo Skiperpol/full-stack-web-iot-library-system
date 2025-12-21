@@ -37,7 +37,9 @@ export default function BooksPage() {
     scanCancelledRef.current = false;
 
     try {
-      const { data } = await axios.post("http://localhost:3000/rfid/scan-book");
+      const { data } = await axios.post(
+        "http://localhost:3000/rfid/scan-book-mock"
+      );
 
       const status = data.status;
 
