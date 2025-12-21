@@ -7,7 +7,12 @@ import { EventsGateway } from '../../gateway/events.gateway';
 
 @Injectable()
 export class RfidService {
+  private cancelScanFlag = false;
 
+  cancelScan() {
+    this.cancelScanFlag = true;
+  }
+  
   async scanForRfidCard(
     validateFn: (uid: string, card: any) => Promise<{ ok: boolean; reason?: string }>,
     scanTopic = 'raspberry/rfid/register',
@@ -18,6 +23,7 @@ export class RfidService {
 
     return new Promise((resolve) => {
       let resolved = false;
+      this.cancelScanFlag = false;
       const timeout = setTimeout(() => {
         if (!resolved) {
           resolved = true;
@@ -27,6 +33,13 @@ export class RfidService {
       }, timeoutMs);
 
       const handler = async (topic: string, message: string) => {
+        if (this.cancelScanFlag && !resolved) {
+          resolved = true;
+          clearTimeout(timeout);
+          this.mqtt.publish('raspberry/led', { color: 'red' });
+          resolve({ status: 'cancelled' });
+          return;
+        }
         if (topic === 'raspberry/rfid/scan') {
           try {
             const payload = JSON.parse(message);

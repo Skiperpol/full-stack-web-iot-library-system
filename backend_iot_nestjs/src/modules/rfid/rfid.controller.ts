@@ -108,4 +108,10 @@ export class RfidController {
     return { status: 'ok', book };
   }
 
+  @Post('cancel-scan')
+  async cancelScan() {
+    this.rfidService.cancelScan();
+    return { status: 'cancelled' };
+  }
+
 }
