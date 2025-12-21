@@ -1,9 +1,9 @@
 import axios from "axios";
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import HashLoader from "react-spinners/HashLoader";
 import Button from "../../components/button";
 import { toast } from "react-toastify";
+import SubmitScanCardDialog from "../../components/suBmit-scan-card-dialog";
 
 export default function AddClientFormPage() {
   const navigate = useNavigate();
@@ -11,10 +11,12 @@ export default function AddClientFormPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const scanCancelledRef = useRef(false);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
+    scanCancelledRef.current = false;
 
     const payload = {
       name: name.trim(),
@@ -27,18 +29,22 @@ export default function AddClientFormPage() {
         payload
       );
 
-      if (result.data.status == "timeout") {
-        toast.error("Timeout: No card scanned");
-      } else if (result.data.status == "rejected") {
-        toast.error("Rejected");
-      } else if (result.data.status == "ok") {
-        toast.success("Client created");
-        navigate("/clients");
-      } else {
-        toast.error("Unknown response status");
+      if (!scanCancelledRef.current) {
+        if (result.data.status == "timeout") {
+          toast.error("Timeout: No card scanned");
+        } else if (result.data.status == "rejected") {
+          toast.error("Card rejected");
+        } else if (result.data.status == "ok") {
+          toast.success("Client added successfully");
+          navigate("/clients");
+        } else {
+          toast.error("Unknown response status");
+        }
       }
     } catch (err: any) {
-      toast.error(err?.message ?? "Request failed");
+      if (!scanCancelledRef) {
+        toast.error(err?.message ?? "Request failed");
+      }
     } finally {
       setSubmitting(false);
     }
@@ -50,6 +56,8 @@ export default function AddClientFormPage() {
 
   const handleDialogCancel = () => {
     setSubmitting(false);
+    axios.post("http://localhost:3000/rfid/cancel-scan");
+    scanCancelledRef.current = true;
   };
 
   return (
@@ -124,53 +132,7 @@ export default function AddClientFormPage() {
         </div>
       </div>
 
-      {submitting && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="min-w-1/4 max-w-2/5 rounded-2xl bg-white p-6 shadow-lg">
-            <h2 className="text-base font-semibold leading-tight">
-              Submitting
-            </h2>
-            <p className="mt-1 text-xs text-neutral-500">Please scan a card.</p>
-
-            <div className="mt-16 flex flex-col items-center gap-4">
-              <HashLoader />
-              <Button
-                type="button"
-                variant="primary"
-                className="mt-12"
-                onClick={handleDialogCancel}
-              >
-                Cancel
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* {cardDialogOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="min-w-1/4 max-w-2/5 rounded-2xl bg-white p-6 shadow-lg">
-            <h2 className="text-base font-semibold leading-tight">
-              Waiting for card…
-            </h2>
-            <p className="mt-1 text-xs text-neutral-500">
-              Hold the RFID card near the reader to assign it to this client.
-            </p>
-
-            <div className="mt-16 flex flex-col items-center gap-4">
-              <HashLoader />
-              <Button
-                type="button"
-                variant="primary"
-                className="mt-12"
-                onClick={handleCloseCardDialog}
-              >
-                Cancel
-              </Button>
-            </div>
-          </div>
-        </div>
-      )} */}
+      {submitting && <SubmitScanCardDialog onCancel={handleDialogCancel} />}
     </div>
   );
 }
