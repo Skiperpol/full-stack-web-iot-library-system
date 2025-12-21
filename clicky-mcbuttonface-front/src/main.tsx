@@ -12,7 +12,6 @@ import AddBookFormPage from "./pages/books/add-book-form-page";
 import ClientPage from "./pages/clients/client-page";
 import BookPage from "./pages/books/book-page";
 import EditBookPage from "./pages/books/edit-book-page";
-import EditClientPage from "./pages/clients/edit-client-page";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -25,7 +24,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="/books/:cardUid/edit" element={<EditBookPage />} />
           <Route path="/books/add-form" element={<AddBookFormPage />} />
           <Route path="/clients/:id" element={<ClientPage />} />
-          <Route path="/clients/:cardUid/edit" element={<EditClientPage />} />
+          <Route path="/clients/:cardUid/edit" element={<EditBookPage />} />
           <Route path="/clients" element={<ClientsPage />} />
           <Route path="/clients/add-form" element={<AddClientFormPage />} />
         </Route>

@@ -45,7 +45,6 @@ export class RfidController {
     return result;
   }
 
-
   @Post('register-request')
   async registerRequest() {
     const result = await this.rfidService.scanForRfidCard(
