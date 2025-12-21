@@ -18,8 +18,8 @@ export class BorrowService {
     if (!book) throw new NotFoundException('Book not found');
     const client = await this.clientRepo.findOne({ where: { cardId: clientCardId } });
     if (!client) throw new NotFoundException('Client not found');
-    // Check if book is already borrowed (no returnedAt)
-    const active = await this.borrowRepo.findOne({ where: { book: { cardId: bookCardId }, returnedAt: null } });
+    const borrows = await this.borrowRepo.find({ where: { book: { cardId: bookCardId } }, relations: ['book'] });
+    const active = borrows.find(b => b.returnedAt == null);
     if (active) throw new BadRequestException('Book is already borrowed');
     const now = new Date();
     const due = new Date();
