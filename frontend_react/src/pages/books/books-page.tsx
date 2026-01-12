@@ -82,44 +82,60 @@ export default function BooksPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-black">
-      <div className="mx-auto max-w-5xl px-4 py-8">
-        <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h1 className="text-3xl font-semibold tracking-tight">Books</h1>
-            <p className="mt-1 text-sm text-neutral-500">
-              Library catalogue and current availability
-            </p>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-neutral-100">
+      <div className="mx-auto max-w-6xl px-4 py-8">
+        <header className="mb-8">
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+            <div>
+              <h1 className="text-4xl font-bold tracking-tight text-neutral-900 mb-2">
+                Katalog książek
+              </h1>
+              <p className="text-lg text-neutral-600">
+                Przeglądaj wszystkie książki w bibliotece i sprawdź ich dostępność
+              </p>
+            </div>
 
-          <div className="flex items-center gap-3">
-            <span className="inline-flex h-8 items-center rounded-full border border-neutral-200 bg-neutral-50 px-6 text-xs font-medium text-neutral-700">
-              {books.length} book{books.length === 1 ? "" : "s"}
-            </span>
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className="inline-flex h-10 items-center rounded-full border border-neutral-200 bg-white px-6 text-sm font-semibold text-neutral-700 shadow-sm">
+                {books.length} {books.length === 1 ? "książka" : books.length < 5 ? "książki" : "książek"}
+              </span>
 
-            <Button type="button" variant="primary" onClick={handleAddBook}>
-              <MdPlaylistAdd />
-              <span>Add book</span>
-            </Button>
+              <Button type="button" variant="primary" onClick={handleAddBook}>
+                <MdPlaylistAdd />
+                <span>Dodaj książkę</span>
+              </Button>
 
-            <Button
-              type="button"
-              variant="primary"
-              onClick={handleScanBookCard}
-            >
-              <FaRegAddressCard />
-              <span>Scan book card</span>
-            </Button>
+              <Button
+                type="button"
+                variant="primary"
+                onClick={handleScanBookCard}
+                bgColor="bg-emerald-600 hover:bg-emerald-700"
+              >
+                <FaRegAddressCard />
+                <span>Skanuj kartę</span>
+              </Button>
+            </div>
           </div>
         </header>
 
         {books.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-neutral-200 bg-neutral-50 px-4 py-10 text-center text-sm text-neutral-500">
-            No books in the catalogue yet. Add a new book in the admin panel and
-            it&apos;ll show up here.
+          <div className="rounded-2xl border-2 border-dashed border-neutral-300 bg-white px-8 py-16 text-center shadow-sm">
+            <div className="mx-auto w-16 h-16 rounded-full bg-neutral-100 flex items-center justify-center mb-4">
+              <MdPlaylistAdd className="text-3xl text-neutral-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-neutral-900 mb-2">
+              Brak książek w katalogu
+            </h3>
+            <p className="text-sm text-neutral-500 mb-6 max-w-md mx-auto">
+              Dodaj nową książkę, aby rozpocząć zarządzanie biblioteką
+            </p>
+            <Button type="button" variant="primary" onClick={handleAddBook}>
+              <MdPlaylistAdd />
+              <span>Dodaj pierwszą książkę</span>
+            </Button>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {books.map((book) => (
               <BookTile
                 key={book.cardId}

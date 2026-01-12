@@ -61,30 +61,37 @@ export default function AddClientFormPage() {
   };
 
   return (
-    <div className="flex h-[70vh] w-5xl items-center justify-center bg-white text-black">
-      <div className="w-5xl px-4 py-8">
-        <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h1 className="text-3xl font-semibold tracking-tight">
-              Add new client
-            </h1>
-            <p className="mt-1 text-sm text-neutral-500">
-              Register a new RFID library member
-            </p>
+    <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-neutral-100 py-8">
+      <div className="mx-auto max-w-2xl px-4">
+        <header className="mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold tracking-tight text-neutral-900">
+                Dodaj nowego użytkownika
+              </h1>
+              <p className="mt-1 text-base text-neutral-600">
+                Zarejestruj nowego członka biblioteki z kartą RFID
+              </p>
+            </div>
           </div>
         </header>
 
-        <div className="w-full mt-6">
+        <div className="w-full">
           <form
             onSubmit={handleSubmit}
-            className="space-y-5 w-full rounded-2xl border border-neutral-200 bg-neutral-50/80 p-6 shadow-sm"
+            className="space-y-6 w-full rounded-2xl border border-neutral-200 bg-white p-8 shadow-lg"
           >
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <label
                 htmlFor="name"
-                className="text-xs font-medium uppercase tracking-wide text-neutral-700"
+                className="block text-sm font-semibold text-neutral-900"
               >
-                Name
+                Imię i nazwisko
               </label>
               <input
                 id="name"
@@ -92,15 +99,15 @@ export default function AddClientFormPage() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full min-h-12 rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-100"
-                placeholder="Alice Smith"
+                className="w-full min-h-12 rounded-xl border border-neutral-300 bg-neutral-50 px-4 py-3 text-base outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:bg-white"
+                placeholder="np. Jan Kowalski"
               />
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <label
                 htmlFor="email"
-                className="text-xs font-medium uppercase tracking-wide text-neutral-700"
+                className="block text-sm font-semibold text-neutral-900"
               >
                 Email
               </label>
@@ -110,22 +117,27 @@ export default function AddClientFormPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full min-h-12 rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-100"
-                placeholder="alice@example.com"
+                className="w-full min-h-12 rounded-xl border border-neutral-300 bg-neutral-50 px-4 py-3 text-base outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:bg-white"
+                placeholder="np. jan.kowalski@example.com"
               />
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-2">
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-neutral-200">
               <Button
                 type="button"
                 variant="secondary"
                 onClick={handleCancel}
                 disabled={submitting}
               >
-                Cancel
+                Anuluj
               </Button>
-              <Button type="submit" variant="primary" disabled={submitting}>
-                {submitting ? "Saving..." : "Save client"}
+              <Button 
+                type="submit" 
+                variant="primary" 
+                disabled={submitting}
+                bgColor="bg-blue-600 hover:bg-blue-700"
+              >
+                {submitting ? "Zapisywanie..." : "Zapisz użytkownika"}
               </Button>
             </div>
           </form>

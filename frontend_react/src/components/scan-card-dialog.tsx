@@ -14,9 +14,9 @@ export default function ScanCardDialog({
 }: SubmitScanCardDialogProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="min-w-1/4 max-w-2/5 rounded-2xl bg-white p-6 shadow-lg">
-        <h2 className="text-base font-semibold leading-tight">{title}</h2>
-        <p className="mt-1 text-xs text-neutral-500">{subtitle}</p>
+      <div className="w-full max-w-2xl mx-4 rounded-2xl bg-white p-8 shadow-lg">
+        <h2 className="text-xl font-semibold leading-tight">{title}</h2>
+        <p className="mt-2 text-sm text-neutral-500">{subtitle}</p>
 
         <div className="mt-16 flex flex-col items-center gap-4">
           <HashLoader />
@@ -26,7 +26,7 @@ export default function ScanCardDialog({
             className="mt-12"
             onClick={onCancel}
           >
-            Cancel
+            Anuluj
           </Button>
         </div>
       </div>

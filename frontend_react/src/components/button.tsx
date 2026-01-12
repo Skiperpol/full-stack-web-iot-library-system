@@ -21,7 +21,7 @@ export default function Button({
   ...props
 }: ButtonProps) {
   const base =
-    "inline-flex items-center gap-2 rounded-full font-medium shadow-sm transition disabled:cursor-not-allowed disabled:opacity-70";
+    "inline-flex items-center gap-2 rounded-full font-medium shadow-sm transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-70";
 
   const primaryClass = `text-white ${primaryBgClassName}`;
 

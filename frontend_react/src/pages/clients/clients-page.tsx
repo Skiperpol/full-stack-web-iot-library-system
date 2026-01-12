@@ -82,44 +82,60 @@ export default function ClientsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-black">
-      <div className="mx-auto max-w-5xl px-4 py-8">
-        <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h1 className="text-3xl font-semibold tracking-tight">Clients</h1>
-            <p className="mt-1 text-sm text-neutral-500">
-              RFID library members and their active borrows
-            </p>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-neutral-100">
+      <div className="mx-auto max-w-6xl px-4 py-8">
+        <header className="mb-8">
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+            <div>
+              <h1 className="text-4xl font-bold tracking-tight text-neutral-900 mb-2">
+                Użytkownicy biblioteki
+              </h1>
+              <p className="text-lg text-neutral-600">
+                Zarządzaj członkami biblioteki i ich aktywnymi wypożyczeniami
+              </p>
+            </div>
 
-          <div className="flex items-center gap-3">
-            <span className="inline-flex h-8 items-center rounded-full border border-neutral-200 bg-neutral-50 px-6 text-xs font-medium text-neutral-700">
-              {clients.length} client{clients.length === 1 ? "" : "s"}
-            </span>
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className="inline-flex h-10 items-center rounded-full border border-neutral-200 bg-white px-6 text-sm font-semibold text-neutral-700 shadow-sm">
+                {clients.length} {clients.length === 1 ? "użytkownik" : clients.length < 5 ? "użytkowników" : "użytkowników"}
+              </span>
 
-            <Button type="button" variant="primary" onClick={handleAddClient}>
-              <MdPlaylistAdd />
-              <span>Add client</span>
-            </Button>
+              <Button type="button" variant="primary" onClick={handleAddClient}>
+                <MdPlaylistAdd />
+                <span>Dodaj użytkownika</span>
+              </Button>
 
-            <Button
-              type="button"
-              variant="primary"
-              onClick={handleScanClientCard}
-            >
-              <FaRegAddressCard />
-              <span>Scan client card</span>
-            </Button>
+              <Button
+                type="button"
+                variant="primary"
+                onClick={handleScanClientCard}
+                bgColor="bg-blue-600 hover:bg-blue-700"
+              >
+                <FaRegAddressCard />
+                <span>Skanuj kartę</span>
+              </Button>
+            </div>
           </div>
         </header>
 
         {clients.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-neutral-200 bg-neutral-50 px-4 py-10 text-center text-sm text-neutral-500">
-            No clients yet. Add someone in the admin panel and they&apos;ll show
-            up here.
+          <div className="rounded-2xl border-2 border-dashed border-neutral-300 bg-white px-8 py-16 text-center shadow-sm">
+            <div className="mx-auto w-16 h-16 rounded-full bg-neutral-100 flex items-center justify-center mb-4">
+              <MdPlaylistAdd className="text-3xl text-neutral-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-neutral-900 mb-2">
+              Brak użytkowników
+            </h3>
+            <p className="text-sm text-neutral-500 mb-6 max-w-md mx-auto">
+              Dodaj nowego użytkownika, aby rozpocząć zarządzanie członkami biblioteki
+            </p>
+            <Button type="button" variant="primary" onClick={handleAddClient}>
+              <MdPlaylistAdd />
+              <span>Dodaj pierwszego użytkownika</span>
+            </Button>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {clients.map((client) => (
               <ClientTile
                 key={client.cardId}
