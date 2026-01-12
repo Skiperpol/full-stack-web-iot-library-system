@@ -31,19 +31,19 @@ export default function AddBookFormPage() {
 
       if (!scanCancelledRef.current) {
         if (result.data.status == "timeout") {
-          toast.error("Timeout: No card scanned");
+          toast.error("Timeout: Nie zeskanowano karty");
         } else if (result.data.status == "rejected") {
-          toast.error("Card rejected");
+          toast.error("Karta odrzucona");
         } else if (result.data.status == "ok") {
-          toast.success("Book added successfully");
+          toast.success("Książka została dodana pomyślnie");
           navigate("/books");
         } else {
-          toast.error("Unknown response status");
+          toast.error("Nieznany status odpowiedzi");
         }
       }
     } catch (err: any) {
       if (!scanCancelledRef.current) {
-        toast.error(err?.message ?? "Request failed");
+        toast.error(err?.message ?? "Żądanie nie powiodło się");
       }
     } finally {
       setSubmitting(false);
@@ -146,8 +146,8 @@ export default function AddBookFormPage() {
 
       {submitting && (
         <ScanCardDialog
-          title="Registering book"
-          subtitle="Please scan the new book's card"
+          title="Rejestracja książki"
+          subtitle="Proszę zeskanować kartę nowej książki"
           onCancel={handleDialogCancel}
         />
       )}

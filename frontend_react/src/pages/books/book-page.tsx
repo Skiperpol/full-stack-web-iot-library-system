@@ -24,7 +24,7 @@ export default function BookPage() {
     axios
       .get<Book>(`http://localhost:3000/books/${id}`)
       .then((res) => setBook(res.data))
-      .catch((e) => setError(e?.message ?? "Request failed"))
+      .catch((e) => setError(e?.message ?? "Żądanie nie powiodło się"))
       .finally(() => setLoading(false));
   }, [id]);
 
@@ -39,7 +39,7 @@ export default function BookPage() {
 
   const handleDeleteBook = async () => {
     if (!id) return;
-    if (!window.confirm("Are you sure you want to delete this book?")) return;
+    if (!window.confirm("Czy na pewno chcesz usunąć tę książkę?")) return;
 
     setActionLoading(true);
     setError("");
@@ -48,7 +48,7 @@ export default function BookPage() {
       await axios.delete(`http://localhost:3000/books/${id}`);
       navigate("/books");
     } catch (e: any) {
-      setError(e?.message ?? "Failed to delete book");
+      setError(e?.message ?? "Nie udało się usunąć książki");
       setActionLoading(false);
     }
   };
@@ -57,7 +57,7 @@ export default function BookPage() {
     return (
       <div className="min-h-screen bg-white text-black">
         <div className="mx-auto max-w-5xl px-4 py-8">
-          <p className="text-sm text-red-600">Invalid book id.</p>
+          <p className="text-sm text-red-600">Nieprawidłowy identyfikator książki.</p>
         </div>
       </div>
     );
@@ -76,11 +76,11 @@ export default function BookPage() {
       <div className="min-h-[70vh] w-full bg-white text-black">
         <div className="flex min-h-[70vh] items-center justify-center px-4">
           <div className="text-center">
-            <p className="text-sm text-neutral-600">Book not found.</p>
+            <p className="text-sm text-neutral-600">Książka nie znaleziona.</p>
 
             <div className="mt-4">
               <Button variant="primary" type="button" onClick={handleBack}>
-                Back to books
+                Powrót do książek
               </Button>
             </div>
           </div>

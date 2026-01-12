@@ -32,7 +32,7 @@ export default function ClientPage() {
       console.log(res.data);
       setClient(res.data);
     } catch (e: any) {
-      setError(e?.message ?? "Request failed");
+      setError(e?.message ?? "Żądanie nie powiodło się");
       setClient(null);
     } finally {
       setLoading(false);
@@ -54,7 +54,7 @@ export default function ClientPage() {
 
   const handleDeleteClient = async () => {
     if (!id) return;
-    if (!window.confirm("Are you sure you want to delete this client?")) return;
+    if (!window.confirm("Czy na pewno chcesz usunąć tego użytkownika?")) return;
 
     setActionLoading(true);
     setError("");
@@ -63,7 +63,7 @@ export default function ClientPage() {
       await axios.delete(`http://localhost:3000/clients/${id}`);
       navigate("/clients");
     } catch (e: any) {
-      setError(e?.message ?? "Failed to delete client");
+      setError(e?.message ?? "Nie udało się usunąć użytkownika");
       setActionLoading(false);
     }
   };
@@ -81,17 +81,17 @@ export default function ClientPage() {
 
       if (!scanCancelledRef.current) {
         if (status == "timeout") {
-          toast.error("Timeout: No card scanned");
+          toast.error("Timeout: Nie zeskanowano karty");
         } else if (status == "rejected") {
-          toast.error("Card rejected");
+          toast.error("Karta odrzucona");
         } else if (status == "ok") {
           return data.cardId;
         } else {
-          toast.error("Unknown response status");
+          toast.error("Nieznany status odpowiedzi");
         }
       }
     } catch (e: any) {
-      toast.error(e?.message ?? "Request failed");
+      toast.error(e?.message ?? "Żądanie nie powiodło się");
     } finally {
       setIsBookDialogOpen(false);
     }
@@ -106,7 +106,7 @@ export default function ClientPage() {
         clientCardId: id,
       });
     } catch (e: any) {
-      toast.error(e?.response?.data?.message || e?.message || "Request failed");
+      toast.error(e?.response?.data?.message || e?.message || "Żądanie nie powiodło się");
       return;
     }
 
@@ -128,7 +128,7 @@ export default function ClientPage() {
     return (
       <div className="min-h-screen bg-white text-black">
         <div className="mx-auto max-w-5xl px-4 py-8">
-          <p className="text-sm text-red-600">Invalid client id.</p>
+          <p className="text-sm text-red-600">Nieprawidłowy identyfikator użytkownika.</p>
         </div>
       </div>
     );
@@ -147,11 +147,11 @@ export default function ClientPage() {
       <div className="min-h-[70vh] w-full bg-white text-black">
         <div className="flex min-h-[70vh] items-center justify-center px-4">
           <div className="text-center">
-            <p className="text-sm text-neutral-600">Client not found.</p>
+            <p className="text-sm text-neutral-600">Użytkownik nie znaleziony.</p>
 
             <div className="mt-4">
               <Button variant="primary" type="button" onClick={handleBack}>
-                Back to clients
+                Powrót do użytkowników
               </Button>
             </div>
           </div>
@@ -186,7 +186,7 @@ export default function ClientPage() {
                 </div>
                 
               </div>
-              <div className="flex w-30 mt-4 items-center gap-1.5 text-xs text-neutral-600 bg-neutral-100 px-2.5 py-1 rounded-full">
+              <div className="flex w-33 mt-4 items-center gap-1.5 text-xs text-neutral-600 bg-neutral-100 px-2.5 py-1 rounded-full">
                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
@@ -375,8 +375,8 @@ export default function ClientPage() {
 
       {isBookDialogOpen && (
         <ScanCardDialog
-          title="Book borrow"
-          subtitle="Please scan the book's card"
+          title="Wypożyczenie książki"
+          subtitle="Proszę zeskanować kartę książki"
           onCancel={handleCancelDialog}
         />
       )}

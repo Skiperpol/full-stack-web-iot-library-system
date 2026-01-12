@@ -29,7 +29,7 @@ export default function UpdateBookFormPage() {
         setTitle(res.data?.title ?? "");
         setAuthor(res.data?.author ?? "");
       })
-      .catch((e) => setError(e?.message ?? "Request failed"))
+      .catch((e) => setError(e?.message ?? "Żądanie nie powiodło się"))
       .finally(() => setLoading(false));
   }, [cardUid]);
 
@@ -49,7 +49,7 @@ export default function UpdateBookFormPage() {
       await axios.put(`http://localhost:3000/books/${cardUid}`, payload);
       navigate(`/books/${cardUid}`);
     } catch (err: any) {
-      setError(err?.message ?? "Request failed");
+      setError(err?.message ?? "Żądanie nie powiodło się");
     } finally {
       setSubmitting(false);
     }

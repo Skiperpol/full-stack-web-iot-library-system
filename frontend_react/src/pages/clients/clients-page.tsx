@@ -24,7 +24,7 @@ export default function ClientsPage() {
     axios
       .get<Client[]>("http://localhost:3000/clients")
       .then((res) => setClients(res.data))
-      .catch((e) => setError(e?.message ?? "Request failed"))
+      .catch((e) => setError(e?.message ?? "Żądanie nie powiodło się"))
       .finally(() => setLoading(false));
   }, []);
 
@@ -45,18 +45,18 @@ export default function ClientsPage() {
 
       if (!scanCancelledRef.current) {
         if (status == "timeout") {
-          toast.error("Timeout: No card scanned");
+          toast.error("Timeout: Nie zeskanowano karty");
         } else if (status == "rejected") {
-          toast.error("Card rejected");
+          toast.error("Karta odrzucona");
         } else if (status == "ok") {
           navigate(`/clients/${data.cardId}`);
         } else {
-          toast.error("Unknown response status");
+          toast.error("Nieznany status odpowiedzi");
         }
       }
     } catch (err: any) {
       if (!scanCancelledRef.current) {
-        toast.error(err?.message ?? "Request failed");
+        toast.error(err?.message ?? "Żądanie nie powiodło się");
       }
     } finally {
       setIsCardScanning(false);
@@ -149,8 +149,8 @@ export default function ClientsPage() {
 
       {isCardScanning && (
         <ScanCardDialog
-          title="Client page"
-          subtitle="Please scan the client's card"
+          title="Strona użytkownika"
+          subtitle="Proszę zeskanować kartę użytkownika"
           onCancel={handleCancelDialog}
         />
       )}

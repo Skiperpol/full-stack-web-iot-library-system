@@ -10,7 +10,7 @@ interface SubmitScanCardDialogProps {
 export default function ScanCardDialog({
   onCancel,
   title,
-  subtitle = "Please scan a card",
+  subtitle = "Proszę zeskanować kartę",
 }: SubmitScanCardDialogProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">

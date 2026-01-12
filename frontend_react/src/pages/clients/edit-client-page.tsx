@@ -31,7 +31,7 @@ export default function UpdateClientFormPage() {
         setEmail(res.data?.email ?? "");
         setExistingCardUid(res.data?.cardUid ?? cardUid ?? null);
       })
-      .catch((e) => setError(e?.message ?? "Request failed"))
+      .catch((e) => setError(e?.message ?? "Żądanie nie powiodło się"))
       .finally(() => setLoading(false));
   }, [cardUid]);
 
@@ -51,7 +51,7 @@ export default function UpdateClientFormPage() {
       await axios.put(`http://localhost:3000/clients/${cardUid}`, payload);
       navigate(`/clients/${cardUid}`);
     } catch (err: any) {
-      setError(err?.message ?? "Request failed");
+      setError(err?.message ?? "Żądanie nie powiodło się");
     } finally {
       setSubmitting(false);
     }

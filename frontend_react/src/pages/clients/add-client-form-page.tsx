@@ -31,19 +31,19 @@ export default function AddClientFormPage() {
 
       if (!scanCancelledRef.current) {
         if (result.data.status == "timeout") {
-          toast.error("Timeout: No card scanned");
+          toast.error("Timeout: Nie zeskanowano karty");
         } else if (result.data.status == "rejected") {
-          toast.error("Card rejected");
+          toast.error("Karta odrzucona");
         } else if (result.data.status == "ok") {
-          toast.success("Client added successfully");
+          toast.success("Użytkownik został dodany pomyślnie");
           navigate("/clients");
         } else {
-          toast.error("Unknown response status");
+          toast.error("Nieznany status odpowiedzi");
         }
       }
     } catch (err: any) {
       if (!scanCancelledRef.current) {
-        toast.error(err?.message ?? "Request failed");
+        toast.error(err?.message ?? "Żądanie nie powiodło się");
       }
     } finally {
       setSubmitting(false);
@@ -146,8 +146,8 @@ export default function AddClientFormPage() {
 
       {submitting && (
         <ScanCardDialog
-          title="Registering client"
-          subtitle="Please scan the new client's card"
+          title="Rejestracja użytkownika"
+          subtitle="Proszę zeskanować kartę nowego użytkownika"
           onCancel={handleDialogCancel}
         />
       )}

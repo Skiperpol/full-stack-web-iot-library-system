@@ -24,7 +24,7 @@ export default function BooksPage() {
     axios
       .get<Book[]>("http://localhost:3000/books")
       .then((res) => setBooks(res.data))
-      .catch((e) => setError(e?.message ?? "Request failed"))
+      .catch((e) => setError(e?.message ?? "Żądanie nie powiodło się"))
       .finally(() => setLoading(false));
   }, []);
 
@@ -45,18 +45,18 @@ export default function BooksPage() {
 
       if (!scanCancelledRef.current) {
         if (status == "timeout") {
-          toast.error("Timeout: No card scanned");
+          toast.error("Timeout: Nie zeskanowano karty");
         } else if (status == "rejected") {
-          toast.error("Card rejected");
+          toast.error("Karta odrzucona");
         } else if (status == "ok") {
           navigate(`/books/${data.cardId}`);
         } else {
-          toast.error("Unknown response status");
+          toast.error("Nieznany status odpowiedzi");
         }
       }
     } catch (err: any) {
       if (!scanCancelledRef.current) {
-        toast.error(err?.message ?? "Request failed");
+        toast.error(err?.message ?? "Żądanie nie powiodło się");
       }
     } finally {
       setIsCardScanning(false);
@@ -149,8 +149,8 @@ export default function BooksPage() {
 
       {isCardScanning && (
         <ScanCardDialog
-          title="Book page"
-          subtitle="Please scan the book's card"
+          title="Strona książki"
+          subtitle="Proszę zeskanować kartę książki"
           onCancel={handleCancelDialog}
         />
       )}
