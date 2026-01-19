@@ -211,7 +211,7 @@ W tej sekcji opisano najważniejsze fragmenty kodu odpowiedzialne za kluczowe fu
 \subsubsection{Obsługa odczytu kart RFID}
 Czytnik RFID na Raspberry Pi wykorzystuje bibliotekę \texttt{mfrc522} do komunikacji z modułem MFRC522. Poniżej przedstawiono kluczowy fragment kodu odpowiedzialny za odczyt karty:
 
-\begin{lstlisting}[language=Python, caption={Odczyt karty RFID - rfid\_reader.py}]
+\begin{lstlisting}[language=Python, caption={Odczyt karty RFID - rfid_reader.py}]
 class RFIDReader:
     def __init__(self):
         """initialize rfid reader"""
@@ -452,7 +452,7 @@ System implementuje mechanizmy obsługi błędów:
 \begin{itemize}
     \item Timeout dla operacji skanowania (domyślnie 10 sekund).
     \item Automatyczne przełączanie LED na zielony po zakończeniu operacji.
-    \item Komunikaty błędów wyświetlane na wyświetlaczu OLED.
+    \item Generyczny komunikat o błędzie wyświetlany na wyświetlaczu OLED.
     \item Logowanie wszystkich operacji w konsoli dla celów diagnostycznych.
 \end{itemize}
 
