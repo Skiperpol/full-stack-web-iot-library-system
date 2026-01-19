@@ -127,7 +127,7 @@ export default function ClientsPage() {
               <span>Scan client card</span>
             </Button>
           </div>
-
+          </div>
           <div className="mb-6">
             <div className="relative max-w-md">
               <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" />
