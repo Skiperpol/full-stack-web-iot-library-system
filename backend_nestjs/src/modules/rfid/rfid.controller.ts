@@ -104,6 +104,21 @@ export class RfidController {
     return result;
   }
 
+  // @Post("register-request")
+  // async registerRequest() {
+  //   const result = await this.rfidService.scanForRfidCard(async (uid, card) => {
+  //     if (!card) return { ok: true };
+
+  //     const existingClient =
+  //       (await this.clientService.findOneByCardUid?.(card.uid)) || null;
+  //     if (existingClient) return { ok: false, reason: "busy" };
+
+  //     return { ok: true };
+  //   });
+  //   this.rfidService.gateway.emit("rfid/register-result", result);
+  //   return result;
+  // }
+
   @Post("register-book-request")
   async registerBookRequest() {
     const result = await this.rfidService.scanForRfidCard(async (uid, card) => {
