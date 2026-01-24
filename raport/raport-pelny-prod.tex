@@ -472,7 +472,11 @@ System implementuje mechanizmy obsługi błędów:
 \end{itemize}
 
 \subsubsection{Instalacja i uruchomienie brokera MQTT}
-Broker MQTT (Eclipse Mosquitto) jest uruchamiany w kontenerze Docker:
+
+Broker MQTT (Eclipse Mosquitto) można uruchomić na dwa sposoby: przy użyciu kontenera Docker lub bezpośrednio w systemie operacyjnym Raspberry Pi.
+
+\paragraph{Opcja A: Uruchomienie w kontenerze Docker}
+Ta metoda pozwala na szybkie odizolowanie brokera od reszty systemu.
 
 \begin{enumerate}
     \item Przejdź do katalogu \texttt{mqtt/}:
@@ -484,6 +488,34 @@ cd mqtt
 docker-compose up -d
     \end{verbatim}
     \item Broker będzie dostępny na porcie 1883 (domyślnie \texttt{localhost:1883}).
+\end{enumerate}
+
+\paragraph{Opcja B: Uruchomienie w systemie Raspberry Pi OS (według instrukcji)}
+W zestawach laboratoryjnych broker Mosquitto jest już zainstalowany, lecz domyślnie nie uruchamia się przy starcie systemu.
+
+\begin{enumerate}
+    \item \textbf{Instalacja (jeśli wymagana):} Jeśli system nie posiada brokera, należy go zainstalować komendą:
+    \begin{verbatim}
+sudo apt update
+sudo apt install mosquitto mosquitto-clients
+    \end{verbatim}
+    
+    \item \textbf{Uruchomienie usługi:} Start brokera przeprowadzamy poleceniem:
+    \begin{verbatim}
+sudo systemctl start mosquitto.service
+    \end{verbatim}
+    
+    \item \textbf{Weryfikacja:} Sprawdzenie statusu działania usługi:
+    \begin{verbatim}
+sudo systemctl status mosquitto.service
+    \end{verbatim}
+    
+    \item \textbf{Dostęp zdalny:} Aby umożliwić dostęp z innych urządzeń w sieci izolowanej, należy do pliku \texttt{/etc/mosquitto/mosquitto.conf} dopisać:
+    \begin{verbatim}
+allow_anonymous true
+listener 1883 0.0.0.0
+    \end{verbatim}
+    Następnie zrestartować usługę: \texttt{sudo systemctl restart mosquitto.service}.
 \end{enumerate}
 
 \subsubsection{Instalacja i uruchomienie backendu}
