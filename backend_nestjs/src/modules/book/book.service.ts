@@ -23,17 +23,23 @@ export class BookService {
   }
 
   findAll() {
-    return this.bookRepo.find({ relations: ['borrows'] });
+    return this.bookRepo.find({ relations: ['borrows', 'borrows.client'] });
   }
 
 
   async findOneByCardUid(cardUid: string) {
-    return this.bookRepo.findOne({ where: { cardId: cardUid }, relations: ['borrows'] });
+    return this.bookRepo.findOne({ 
+      where: { cardId: cardUid }, 
+      relations: ['borrows', 'borrows.client'] 
+    });
   }
 
 
   async updateByCardUid(cardUid: string, dto: UpdateBookDto) {
-    const book = await this.bookRepo.findOne({ where: { cardId: cardUid }, relations: ['borrows'] });
+    const book = await this.bookRepo.findOne({ 
+      where: { cardId: cardUid }, 
+      relations: ['borrows', 'borrows.client'] 
+    });
     if (!book) throw new NotFoundException('Book not found');
     Object.assign(book, dto as any);
     return this.bookRepo.save(book);
@@ -41,7 +47,10 @@ export class BookService {
 
 
   async removeByCardUid(cardUid: string) {
-    const book = await this.bookRepo.findOne({ where: { cardId: cardUid }, relations: ['borrows'] });
+    const book = await this.bookRepo.findOne({ 
+      where: { cardId: cardUid }, 
+      relations: ['borrows', 'borrows.client'] 
+    });
     if (!book) throw new NotFoundException('Book not found');
     return this.bookRepo.remove(book);
   }

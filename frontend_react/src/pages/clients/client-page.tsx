@@ -7,6 +7,7 @@ import Button from "../../components/button";
 import type { Client } from "../../types/client";
 import { MdPlaylistAdd } from "react-icons/md";
 import { IoMdReturnLeft } from "react-icons/io";
+import { FaRegAddressCard } from "react-icons/fa";
 import { toast } from "react-toastify";
 import ScanCardDialog from "../../components/scan-card-dialog";
 
@@ -19,6 +20,7 @@ export default function ClientPage() {
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState("");
   const [isBookDialogOpen, setIsBookDialogOpen] = useState(false);
+  const [isReturnScanning, setIsReturnScanning] = useState(false);
   const scanCancelledRef = useRef(false);
 
   const fetchClient = useCallback(async () => {
@@ -118,8 +120,50 @@ export default function ClientPage() {
     fetchClient();
   };
 
+  const handleReturnByScan = async () => {
+    if (!id) {
+      toast.error("Brak identyfikatora użytkownika");
+      return;
+    }
+
+    setIsReturnScanning(true);
+    scanCancelledRef.current = false;
+
+    try {
+      const { data } = await axios.post("http://localhost:3000/rfid/return-book", {
+        clientCardId: id,
+      });
+
+      if (!scanCancelledRef.current) {
+        if (data.status === "timeout") {
+          toast.error("Timeout: Nie zeskanowano karty");
+        } else if (data.status === "rejected") {
+          if (data.reason === "book_not_found") {
+            toast.error("Książka nie została znaleziona");
+          } else {
+            toast.error("Karta odrzucona");
+          }
+        } else if (data.status === "ok") {
+          toast.success("Książka została zwrócona pomyślnie");
+          await fetchClient();
+        } else if (data.status === "error") {
+          toast.error(data.message || "Nie udało się zwrócić książki");
+        } else {
+          toast.error("Nieznany status odpowiedzi");
+        }
+      }
+    } catch (err: any) {
+      if (!scanCancelledRef.current) {
+        toast.error(err?.response?.data?.message || err?.message || "Żądanie nie powiodło się");
+      }
+    } finally {
+      setIsReturnScanning(false);
+    }
+  };
+
   const handleCancelDialog = () => {
     setIsBookDialogOpen(false);
+    setIsReturnScanning(false);
     axios.post("http://localhost:3000/rfid/cancel-scan");
     scanCancelledRef.current = true;
   };
@@ -256,15 +300,27 @@ export default function ClientPage() {
                   Aktywne wypożyczenia
                 </h2>
 
-                <Button
-                  type="button"
-                  variant="primary"
-                  onClick={handleBorrow}
-                  bgColor="bg-emerald-600 hover:bg-emerald-700"
-                >
-                  <MdPlaylistAdd />
-                  <span>Wypożycz</span>
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="primary"
+                    onClick={handleReturnByScan}
+                    bgColor="bg-blue-600 hover:bg-blue-700"
+                    disabled={isReturnScanning || actionLoading}
+                  >
+                    <FaRegAddressCard />
+                    <span>Zwróć przez skanowanie</span>
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="primary"
+                    onClick={handleBorrow}
+                    bgColor="bg-emerald-600 hover:bg-emerald-700"
+                  >
+                    <MdPlaylistAdd />
+                    <span>Wypożycz</span>
+                  </Button>
+                </div>
               </div>
 
               {activeBorrows.length === 0 ? (
@@ -294,9 +350,17 @@ export default function ClientPage() {
                     >
                       <div className="flex-1 min-w-0">
                         {borrow.book?.title && (
-                          <h3 className="text-base font-semibold text-neutral-900 mb-1">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (borrow.book?.cardId) {
+                                navigate(`/books/${borrow.book.cardId}`);
+                              }
+                            }}
+                            className="text-base font-semibold text-neutral-900 mb-1 hover:text-emerald-600 transition-colors cursor-pointer text-left underline decoration-1 hover:decoration-2"
+                          >
                             {borrow.book.title}
-                          </h3>
+                          </button>
                         )}
                         {borrow.book?.author && (
                           <p className="text-sm text-neutral-600 mb-3">
@@ -351,8 +415,20 @@ export default function ClientPage() {
                       className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-neutral-200 bg-white px-4 py-3 hover:shadow-sm transition-shadow"
                     >
                       <div className="flex-1">
-                        {borrow.book?.title && (
-                          <p className="font-medium text-neutral-900 mb-1">{borrow.book.title}</p>
+                        {borrow.book?.title ? (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (borrow.book?.cardId) {
+                                navigate(`/books/${borrow.book.cardId}`);
+                              }
+                            }}
+                            className="font-medium text-neutral-900 mb-1 hover:text-emerald-600 transition-colors cursor-pointer text-left underline decoration-1 hover:decoration-2"
+                          >
+                            {borrow.book.title}
+                          </button>
+                        ) : (
+                          <p className="font-medium text-neutral-500 mb-1">Brak danych książki</p>
                         )}
                         <div className="flex flex-wrap items-center gap-3 text-xs text-neutral-500">
                           <span>Wypożyczono: {new Date(borrow.borrowedAt).toLocaleDateString("pl-PL")}</span>
@@ -377,6 +453,14 @@ export default function ClientPage() {
         <ScanCardDialog
           title="Wypożyczenie książki"
           subtitle="Proszę zeskanować kartę książki"
+          onCancel={handleCancelDialog}
+        />
+      )}
+
+      {isReturnScanning && (
+        <ScanCardDialog
+          title="Zwracanie książki"
+          subtitle="Przyłóż kartę książki do czytnika"
           onCancel={handleCancelDialog}
         />
       )}

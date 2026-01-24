@@ -55,4 +55,32 @@ export class BorrowService {
   async findByClientId(clientCardId: string) {
     return this.borrowRepo.find({ where: { client: { cardId: clientCardId } }, relations: ['book', 'client'] });
   }
+
+  async returnBookByCards(clientCardId: string, bookCardId: string) {
+    const client = await this.clientRepo.findOne({ where: { cardId: clientCardId } });
+    if (!client) throw new NotFoundException('Client not found');
+
+    const book = await this.bookRepo.findOne({ where: { cardId: bookCardId } });
+    if (!book) throw new NotFoundException('Book not found');
+
+    const borrow = await this.borrowRepo.findOne({
+      where: {
+        client: { cardId: clientCardId },
+        book: { cardId: bookCardId },
+        returnedAt: null,
+      },
+      relations: ['book', 'client'],
+    });
+
+    if (!borrow) {
+      throw new BadRequestException('No active borrow found for this client and book');
+    }
+
+    if (borrow.returnedAt) {
+      throw new BadRequestException('Book already returned');
+    }
+
+    borrow.returnedAt = new Date();
+    return this.borrowRepo.save(borrow);
+  }
 }

@@ -23,7 +23,11 @@ export default function BookPage() {
 
     axios
       .get<Book>(`http://localhost:3000/books/${id}`)
-      .then((res) => setBook(res.data))
+      .then((res) => {
+        console.log("Book data:", res.data);
+        console.log("Borrows:", res.data.borrows);
+        setBook(res.data);
+      })
       .catch((e) => setError(e?.message ?? "Żądanie nie powiodło się"))
       .finally(() => setLoading(false));
   }, [id]);
@@ -205,8 +209,24 @@ export default function BookPage() {
                         className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-neutral-200 bg-white px-4 py-3 hover:shadow-md transition-shadow"
                       >
                         <div className="flex-1">
-                          {borrow.client?.name && (
-                            <p className="font-semibold text-neutral-900 mb-1">{borrow.client.name}</p>
+                          {borrow.client?.name ? (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                console.log("Client data:", borrow.client);
+                                if (borrow.client?.cardId) {
+                                  navigate(`/clients/${borrow.client.cardId}`);
+                                } else {
+                                  console.error("Client cardId is missing:", borrow.client);
+                                }
+                              }}
+                              className="font-semibold text-neutral-900 mb-1 hover:text-blue-600 transition-colors cursor-pointer text-left underline decoration-1 hover:decoration-2"
+                            >
+                              {borrow.client.name}
+                            </button>
+                          ) : (
+                            <p className="font-semibold text-neutral-500 mb-1">Brak danych użytkownika</p>
                           )}
                           <div className="flex flex-wrap items-center gap-3 text-xs text-neutral-600">
                             <span className="flex items-center gap-1">
@@ -248,8 +268,21 @@ export default function BookPage() {
                       className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-neutral-200 bg-white px-4 py-3 hover:shadow-sm transition-shadow"
                     >
                       <div className="flex-1">
-                        {borrow.client?.name && (
-                          <p className="font-medium text-neutral-900 mb-1">{borrow.client.name}</p>
+                        {borrow.client?.name ? (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              e.preventDefault();
+                              if (borrow.client?.cardId) {
+                                navigate(`/clients/${borrow.client.cardId}`);
+                              }
+                            }}
+                            className="font-medium text-neutral-900 mb-1 hover:text-blue-600 transition-colors cursor-pointer text-left underline decoration-1 hover:decoration-2"
+                          >
+                            {borrow.client.name}
+                          </button>
+                        ) : (
+                          <p className="font-medium text-neutral-500 mb-1">Brak danych użytkownika</p>
                         )}
                         <div className="flex flex-wrap items-center gap-3 text-xs text-neutral-500">
                           <span>Wypożyczono: {new Date(borrow.borrowedAt).toLocaleDateString("pl-PL")}</span>

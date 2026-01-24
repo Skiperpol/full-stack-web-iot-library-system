@@ -113,6 +113,7 @@ src/
 - `POST /rfid/scan-book` - Skanuj kartę książki
 - `POST /rfid/register-client` - Zarejestruj nowego użytkownika z kartą RFID
 - `POST /rfid/register-book` - Zarejestruj nową książkę z kartą RFID
+- `POST /rfid/return-book` - Zwróć książkę przez skanowanie karty klienta, a następnie karty książki
 - `POST /rfid/cancel-scan` - Anuluj aktualne skanowanie
 
 ## 🗄️ Baza danych
