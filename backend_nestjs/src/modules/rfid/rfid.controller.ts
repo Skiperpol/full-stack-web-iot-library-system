@@ -25,7 +25,6 @@ export class RfidController {
       return { ok: true };
     });
     if (result.status === "ok" && result.uid) {
-      // added: if card doens't exist yet, add it
       let card = await this.cardService.findByUid(result.uid);
       if (!card) {
         card = await this.cardService.create(result.uid);

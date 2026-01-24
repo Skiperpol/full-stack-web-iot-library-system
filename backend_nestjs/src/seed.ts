@@ -15,10 +15,6 @@ async function seed() {
   await bookRepo.clear();
   await cardRepo.clear();
 
-
-  // Example cards
-
-
   const cardUser1 = cardRepo.create({ uid: 'CARDUID-USER-1' });
   const cardUser2 = cardRepo.create({ uid: 'CARDUID-USER-2' });
   const cardUser3 = cardRepo.create({ uid: 'CARDUID-USER-3' });
@@ -32,18 +28,13 @@ async function seed() {
     cardBook1, cardBook2, cardBook3, cardBook4
   ]);
 
-  // Map UID to numeric ID
   const cardIdByUid = Object.fromEntries(savedCards.map(card => [card.uid, card.id]));
-
-  // Example users
 
   const user1 = clientRepo.create({ cardId: cardIdByUid['CARDUID-USER-1'], name: 'Jan Example', email: 'jan@example.com' });
   const user2 = clientRepo.create({ cardId: cardIdByUid['CARDUID-USER-2'], name: 'Anna Example', email: 'anna@example.com' });
   const user3 = clientRepo.create({ cardId: cardIdByUid['CARDUID-USER-3'], name: 'Piotr Test', email: 'piotr@example.com' });
   const user4 = clientRepo.create({ cardId: cardIdByUid['CARDUID-USER-4'], name: 'Maria Testowa', email: 'maria@example.com' });
   await clientRepo.save([user1, user2, user3, user4]);
-
-  // Example books
 
   const book1 = bookRepo.create({ cardId: cardIdByUid['CARDUID-BOOK-1'], title: 'Przykładowa Książka', author: 'Autor Testowy' });
   const book2 = bookRepo.create({ cardId: cardIdByUid['CARDUID-BOOK-2'], title: 'Inna Książka', author: 'Drugi Autor' });

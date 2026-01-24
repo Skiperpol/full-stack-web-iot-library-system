@@ -1,10 +1,9 @@
-
 node_modules/
-# .env
+.env
 dist/
 build/
 package-lock.json
 database.sqlite
 mqtt/mosquitto/data/
 mqtt/mosquitto/log/
-.env.*
+

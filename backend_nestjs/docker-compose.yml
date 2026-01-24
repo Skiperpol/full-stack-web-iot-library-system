@@ -8,7 +8,6 @@ services:
       - .env
     depends_on:
       - mqtt
-    # command: npm run start:dev
   mqtt:
     image: eclipse-mosquitto:2.0
     container_name: mosquitto

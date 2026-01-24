@@ -114,7 +114,6 @@ export class RfidService {
 
       this.logger.log(`RFID card scanned: ${uid}`);
 
-      // led to red (processing)
       this.mqtt.publish('raspberry/led', { color: 'red' });
 
       const card = await this.cardService.findByUid(uid);
