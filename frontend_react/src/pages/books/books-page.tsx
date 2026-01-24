@@ -25,7 +25,7 @@ export default function BooksPage() {
     axios
       .get<Book[]>("http://localhost:3000/books")
       .then((res) => setBooks(res.data))
-      .catch((e) => setError(e?.message ?? "Request failed"))
+      .catch((e) => setError(e?.message ?? "Żądanie nie powiodło się"))
       .finally(() => setLoading(false));
   }, []);
 
@@ -46,18 +46,18 @@ export default function BooksPage() {
 
       if (!scanCancelledRef.current) {
         if (status == "timeout") {
-          toast.error("Timeout: No card scanned");
+          toast.error("Timeout: Nie zeskanowano karty");
         } else if (status == "rejected") {
-          toast.error("Card rejected");
+          toast.error("Karta odrzucona");
         } else if (status == "ok") {
           navigate(`/books/${data.cardId}`);
         } else {
-          toast.error("Unknown response status");
+          toast.error("Nieznany status odpowiedzi");
         }
       }
     } catch (err: any) {
       if (!scanCancelledRef.current) {
-        toast.error(err?.message ?? "Request failed");
+        toast.error(err?.message ?? "Żądanie nie powiodło się");
       }
     } finally {
       setIsCardScanning(false);
@@ -115,7 +115,7 @@ export default function BooksPage() {
 
             <Button type="button" variant="primary" onClick={handleAddBook}>
               <MdPlaylistAdd />
-              <span>Add book</span>
+              <span>Dodaj książkę</span>
             </Button>
 
             <Button
@@ -124,10 +124,10 @@ export default function BooksPage() {
               onClick={handleScanBookCard}
             >
               <FaRegAddressCard />
-              <span>Scan book card</span>
+              <span>Skanuj kartę książki</span>
             </Button>
           </div>
-</div>
+        </div>
           <div className="mb-6">
             <div className="relative max-w-md">
               <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" />
@@ -144,8 +144,8 @@ export default function BooksPage() {
 
         {books.length === 0 ? (
           <div className="rounded-xl border border-dashed border-neutral-200 bg-neutral-50 px-4 py-10 text-center text-sm text-neutral-500">
-            No books in the catalogue yet. Add a new book in the admin panel and
-            it&apos;ll show up here.
+            Brak książek w katalogu. Dodaj nową książkę w panelu administracyjnym,
+            a pojawi się tutaj.
           </div>
         ) : filteredBooks.length === 0 ? (
           <div className="rounded-2xl border-2 border-dashed border-neutral-300 bg-white px-8 py-16 text-center shadow-sm">
@@ -250,8 +250,8 @@ export default function BooksPage() {
 
       {isCardScanning && (
         <ScanCardDialog
-          title="Book page"
-          subtitle="Please scan the book's card"
+          title="Strona książki"
+          subtitle="Przyłóż kartę RFID książki do czytnika"
           onCancel={handleCancelDialog}
         />
       )}

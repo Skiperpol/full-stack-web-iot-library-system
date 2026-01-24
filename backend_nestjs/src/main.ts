@@ -20,20 +20,23 @@ async function bootstrap() {
     const alice = clientRepo.create({
       name: "Alice",
       email: "alice@example.com",
+      cardId: "CARDUID-USER-1",
     });
-    const bob = clientRepo.create({ name: "Bob", email: "bob@example.com" });
+    const bob = clientRepo.create({ name: "Bob", email: "bob@example.com", cardId: "CARDUID-USER-2" });
     const carol = clientRepo.create({
       name: "Carol",
       email: "carol@example.com",
+      cardId: "CARDUID-USER-3",
     });
     await clientRepo.save([alice, bob, carol]);
 
-    const book1 = bookRepo.create({ title: "1984", author: "George Orwell" });
+    const book1 = bookRepo.create({ title: "1984", author: "George Orwell", cardId: "CARDUID-BOOK-1" });
     const book2 = bookRepo.create({
       title: "Brave New World",
       author: "Aldous Huxley",
+      cardId: "CARDUID-BOOK-2",
     });
-    const book3 = bookRepo.create({ title: "Dune", author: "Frank Herbert" });
+    const book3 = bookRepo.create({ title: "Dune", author: "Frank Herbert", cardId: "CARDUID-BOOK-3" });
     await bookRepo.save([book1, book2, book3]);
 
     const now = new Date();
