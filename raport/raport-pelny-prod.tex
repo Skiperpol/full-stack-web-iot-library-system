@@ -166,6 +166,43 @@ System musi spełniać następujące wymagania niefunkcjonalne:
 \end{enumerate}
 
 
+\section{Opis architektury systemu}
+
+System został zaprojektowany w architekturze wielowarstwowej. Składa się z następujących elementów:
+\begin{itemize}
+    \item warstwy klienckiej (aplikacja webowa React),
+    \item warstwy serwerowej (backend NestJS),
+    \item warstwy komunikacyjnej (MQTT, WebSockets),
+    \item warstwy danych (baza danych SQLite),
+    \item warstwy urządzeń IoT (Raspberry Pi z czytnikiem RFID).
+\end{itemize}
+
+\subsection{Schemat architektury aplikacji}
+Poniżej przedstawiono schemat architektury systemu z uwzględnieniem architektury sieciowej.
+
+Architektura systemu opiera się na następujących komponentach:
+\begin{itemize}
+    \item \textbf{Frontend (React)} - aplikacja webowa działająca w przeglądarce, komunikująca się z backendem przez REST API i WebSockets (Socket.IO).
+    \item \textbf{Backend (NestJS)} - serwer aplikacyjny obsługujący logikę biznesową, komunikujący się z bazą danych SQLite oraz brokerem MQTT.
+    \item \textbf{Broker MQTT} - broker komunikacji MQTT uruchomiony w sieci lokalnej (np. na Raspberry Pi lub osobnym serwerze), pośredniczący w komunikacji między terminalem RFID a backendem.
+    \item \textbf{Raspberry Pi} - terminal RFID wyposażony w czytnik MFRC522, diody LED, buzzer i wyświetlacz OLED, komunikujący się z backendem przez protokół MQTT.
+    \item \textbf{Baza danych SQLite} - lokalna baza danych przechowująca informacje o klientach, książkach, kartach RFID i wypożyczeniach.
+\end{itemize}
+
+Komunikacja w systemie odbywa się następująco:
+\begin{itemize}
+    \item Raspberry Pi publikuje zdarzenia skanowania kart na topic \texttt{raspberry/rfid/scan}.
+    \item Backend subskrybuje ten topic, przetwarza dane i odpowiada na topic\newline \texttt{raspberry/rfid/response}.
+    \item Backend steruje diodami LED na Raspberry Pi przez topic \texttt{raspberry/led}.
+    \item Frontend otrzymuje aktualizacje w czasie rzeczywistym przez WebSockets (Socket.IO).
+\end{itemize}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{ArchitekturaIOT.png}
+    \caption{Schemat architektury systemu}
+    \label{fig:architectue}
+\end{figure}
+
 \section{Opis implementacji i zastosowanych rozwiązań}
 
 \subsection{Kluczowe elementy implementacji}
@@ -174,7 +211,9 @@ W tej sekcji opisano najważniejsze fragmenty kodu odpowiedzialne za kluczowe fu
 \subsubsection{Obsługa odczytu kart RFID}
 Czytnik RFID na Raspberry Pi wykorzystuje bibliotekę \texttt{mfrc522} do komunikacji z modułem MFRC522. Poniżej przedstawiono kluczowy fragment kodu odpowiedzialny za odczyt karty:
 
-\begin{lstlisting}[language=Python, caption={Odczyt karty RFID - rfid_reader.py}]
+\begin{lstlisting}[language=Python, caption={Odczyt karty RFID - rfid\_reader.py},
+    showspaces=false, 
+    showstringspaces=false]
 class RFIDReader:
     def __init__(self):
         """initialize rfid reader"""
@@ -270,7 +309,9 @@ Metoda \texttt{create()} weryfikuje dostępność książki przed utworzeniem wy
 \subsection{Implementacja komunikacji MQTT}
 Komunikacja MQTT jest kluczowym elementem systemu, umożliwiającym wymianę danych między Raspberry Pi a backendem. Poniżej przedstawiono implementację klienta MQTT po stronie Raspberry Pi:
 
-\begin{lstlisting}[language=Python, caption={Klient MQTT - mqtt\_client.py}]
+\begin{lstlisting}[language=Python, caption={Klient MQTT - mqtt\_client.py},
+    showspaces=false, 
+    showstringspaces=false]
 class MQTTClient:
     def __init__(self, on_led_change=None, on_response=None):
         self.client = mqtt.Client(client_id=MQTT_CLIENT_ID)
@@ -316,7 +357,9 @@ class MQTTClient:
 
 Po stronie backendu, serwis MQTT subskrybuje odpowiednie topiki i przetwarza przychodzące wiadomości:
 
-\begin{lstlisting}[language=TypeScript, caption={Serwis MQTT - mqtt.service.ts}]
+\begin{lstlisting}[language=TypeScript, caption={Serwis MQTT - mqtt.service.ts},
+    showspaces=false, 
+    showstringspaces=false]
 @Injectable()
 export class MqttService implements OnModuleInit {
   private client: mqtt.MqttClient;
@@ -378,11 +421,6 @@ export class CreateClientDto {
     
     \item \textbf{Ochrona przed błędnymi operacjami} - System weryfikuje poprawność operacji przed ich wykonaniem (np. sprawdza, czy książka jest dostępna przed wypożyczeniem, czy klient nie ma już wypożyczonej tej książki).
     
-    \item \textbf{Komunikacja w sieci lokalnej} - W wersji produkcyjnej zaleca się implementację:
-    \begin{itemize}
-        \item Szyfrowania TLS/SSL dla komunikacji MQTT (MQTTS).
-        \item Uwierzytelniania użytkowników w aplikacji webowej (np. JWT).
-    \end{itemize}
 \end{itemize}
 
 \subsection{Inne istotne rozwiązania}
@@ -408,7 +446,7 @@ this.gateway.emit('rfid/scanned', response);
 \end{lstlisting}
 
 \subsubsection{Automatyczne tworzenie kart}
-System automatycznie tworzy nowe rekordy kart w bazie danych przy pierwszym skanowaniu nieznanego UID. Pozwala to na elastyczne zarządzanie kartami bez konieczności ręcznego dodawania każdej karty przed użyciem.
+System automatycznie tworzy nowe rekordy kart w bazie danych podczas rejestracji użytkownika lub książki, jeśli karta o danym UID nie istnieje. Pozwala to na elastyczne zarządzanie kartami bez konieczności ręcznego dodawania każdej karty przed użyciem podczas procesu rejestracji.
 
 \subsubsection{Obsługa błędów i timeoutów}
 System implementuje mechanizmy obsługi błędów:
@@ -419,42 +457,6 @@ System implementuje mechanizmy obsługi błędów:
     \item Logowanie wszystkich operacji w konsoli dla celów diagnostycznych.
 \end{itemize}
 
-\section{Opis architektury systemu}
-
-System został zaprojektowany w architekturze wielowarstwowej. Składa się z następujących elementów:
-\begin{itemize}
-    \item warstwy klienckiej (aplikacja webowa React),
-    \item warstwy serwerowej (backend NestJS),
-    \item warstwy komunikacyjnej (MQTT, WebSockets),
-    \item warstwy danych (baza danych SQLite),
-    \item warstwy urządzeń IoT (Raspberry Pi z czytnikiem RFID).
-\end{itemize}
-
-\subsection{Schemat architektury aplikacji}
-Poniżej przedstawiono schemat architektury systemu z uwzględnieniem architektury sieciowej.
-
-Architektura systemu opiera się na następujących komponentach:
-\begin{itemize}
-    \item \textbf{Frontend (React)} - aplikacja webowa działająca w przeglądarce, komunikująca się z backendem przez REST API i WebSockets (Socket.IO).
-    \item \textbf{Backend (NestJS)} - serwer aplikacyjny obsługujący logikę biznesową, komunikujący się z bazą danych SQLite oraz brokerem MQTT.
-    \item \textbf{Broker MQTT} - broker komunikacji MQTT uruchomiony w sieci lokalnej (np. na Raspberry Pi lub osobnym serwerze), pośredniczący w komunikacji między terminalem RFID a backendem.
-    \item \textbf{Raspberry Pi} - terminal RFID wyposażony w czytnik MFRC522, diody LED, buzzer i wyświetlacz OLED, komunikujący się z backendem przez protokół MQTT.
-    \item \textbf{Baza danych SQLite} - lokalna baza danych przechowująca informacje o klientach, książkach, kartach RFID i wypożyczeniach.
-\end{itemize}
-
-Komunikacja w systemie odbywa się następująco:
-\begin{itemize}
-    \item Raspberry Pi publikuje zdarzenia skanowania kart na topic \texttt{raspberry/rfid/scan}.
-    \item Backend subskrybuje ten topic, przetwarza dane i odpowiada na topic\newline \texttt{raspberry/rfid/response}.
-    \item Backend steruje diodami LED na Raspberry Pi przez topic \texttt{raspberry/led}.
-    \item Frontend otrzymuje aktualizacje w czasie rzeczywistym przez WebSockets (Socket.IO).
-\end{itemize}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\linewidth]{ArchitekturaIOT.png}
-    \caption{Schemat architektury systemu}
-    \label{fig:architectue}
-\end{figure}
 
 \section{Opis działania i prezentacja interfejsu}
 
@@ -642,11 +644,11 @@ Terminal RFID wyświetla następujące informacje na wyświetlaczu OLED:
 \begin{itemize}
     \item Konfiguracja i uruchomienie środowiska do testowania komunikacji MQTT.
     \item Testowanie integracji między komponentami systemu.
-    \item Dokumentacja projektu i przygotowanie raportu.
+    \item Przygotowanie raportu.
     \item Weryfikacja zgodności z wymaganiami funkcjonalnymi i niefunkcjonalnymi.
     \item Przygotowanie instrukcji instalacji i uruchomienia.
     \item Testowanie scenariuszy użycia i identyfikacja błędów.
-    \item Projekt i implementacja interfejsu użytkownika z wykorzystaniem Tailwind CSS.
+    \item Dodanie nowych funkcjonalnośći do Frontendu i Backendu.
 \end{itemize}
 
 \subsection{Błazej Kowal}
@@ -656,10 +658,6 @@ Terminal RFID wyświetla następujące informacje na wyświetlaczu OLED:
     \item Implementacja WebSockets (Socket.IO) dla aktualizacji w czasie rzeczywistym.
     \item Projekt i implementacja bazy danych SQLite z wykorzystaniem TypeORM.
     \item Implementacja logiki wypożyczeń i zwrotów książek.
-    \item Integracja wszystkich komponentów systemu.
-    
-
-    \item Szacunkowy wkład procentowy: 25\%.
 \end{itemize}
 
 \subsection{Alina Lenart}
@@ -750,7 +748,6 @@ Możliwe kierunki rozbudowy i ulepszeń systemu:
 \subsubsection{Optymalizacja wydajności}
 \begin{itemize}
     \item Migracja z SQLite do PostgreSQL lub MySQL dla większej wydajności i skalowalności.
-    \item Implementacja paginacji dla dużych list danych.
     \item Lazy loading komponentów w aplikacji React.
 \end{itemize}
 
