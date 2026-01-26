@@ -72,7 +72,7 @@ System biblioteczny IoT musi spełniać następujące wymagania funkcjonalne:
 \subsubsection{Proces wypożyczania i zwracania}
 \begin{enumerate}[label=\textbf{W1.1.3.\arabic*}]
     \item System musi umożliwiać wypożyczenie książki poprzez zeskanowanie karty klienta, a następnie karty książki.
-    \item System musi umożliwiać zwrot książki przy pomocy zeskanowania karty klienta.
+    \item System musi umożliwiać zwrot książki przy pomocy zeskanowania karty klienta, a następnie karty książki.
     \item System musi wyświetlać informacje o aktywnych wypożyczeniach klienta po zeskanowaniu jego karty.
     \item System musi weryfikować poprawność operacji (np. czy książka jest dostępna, czy klient już ją wypożyczył).
 \end{enumerate}
@@ -647,7 +647,7 @@ System umożliwia wypożyczanie i zwracanie książek na dwa sposoby:
     \end{figure}
     \begin{itemize}
         \item Zeskanuj kartę klienta (LED zmieni się na zielony).
-        \item Zeskanuj kartę książki (system automatycznie utworzy wypożyczenie).
+        \item Zeskanuj kartę książki (system automatycznie utworzy wypożyczenie lub zwróci wypożyczoną książkę).
         \item Informacja o wypożyczeniu pojawi się w aplikacji webowej w czasie rzeczywistym.
     \end{itemize}
     \item \textbf{Przez interfejs webowy:}
